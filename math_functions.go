@@ -2,56 +2,97 @@ package main
 
 import "fmt"
 
-func fibonacci(n int) []int {
-	if n <= 0 {
+// I check for:
+// Readability
+// Understandability
+// Performance
+// Error handling
+// Bugs & Logical flaws
+// DRY-Principle -> Don't write redundant code
+// SOP-Principle -> Each thing does its own thing
+// KISS-Principle -> Try to keep it simple
+// SOLID-Principle -> https://en.wikipedia.org/wiki/SOLID
+// POLA-Principle -> Code should work as one would expect
+// YAGNI-Principle -> Dont code stuff you might not need
+
+// Removed abbreviations to make code easier to read and understand
+// Removed append and used a more simplified approach which should be less memory intensive
+// Code wouldn't work if length was value 1. Added a check to catch that case.
+func fibonacci(length int) []int {
+	if length <= 0 {
 		return []int{}
 	}
 
-	fib := []int{0, 1}
-	for i := 2; i < n; i++ {
-		fib = append(fib, fib[i-1]+fib[i-2])
+	if length == 1 {
+		return []int{0}
 	}
-	return fib
+
+	fibonacciSequence := make([]int, length)
+	fibonacciSequence[0], fibonacciSequence[1] = 0, 1
+	for index := 2; index < length; index++ {
+		fibonacciSequence[index] = fibonacciSequence[index-1] + fibonacciSequence[index-2]
+	}
+
+	return fibonacciSequence
 }
 
-func factorial(n int) int {
-	if n == 0 {
-		return 1
+// Removed abbreviations to make code easier to read and understand
+// for-loop was flawed which lead to an incorrect factorial. Fixed it by replacing = with <=
+// Added error handling for negative numbers
+func factorial(number int) (int, error) {
+	if number < 0 {
+		return 0, fmt.Errorf("invalid input: can't calculate factorial with negative numbers")
 	}
 
-	result := 1
-	for i := 1; i < n; i++ {
-		result *= i
+	if number == 0 {
+		return 1, nil
 	}
-	return result
+
+	factorialResult := 1
+	for index := 1; index <= number; index++ {
+		factorialResult *= index
+	}
+
+	return factorialResult, nil
 }
 
-func is_prime(num int) bool {
-	if num < 2 {
+// Renamed function according to best practices https://go.dev/doc/effective_go#mixed-caps
+// Removed abbreviations to make code easier to read and understand
+func isPrime(number int) bool {
+	if number < 2 {
 		return false
 	}
 
-	for i := 2; i < num/2; i++ {
-		if num%i == 0 {
+	for divisor := 2; divisor < number/2; divisor++ {
+		if number%divisor == 0 {
 			return false
 		}
 	}
+
 	return true
 }
 
-func print_hello(name string) {
-	fmt.Println("Hello, " + name + "!")
+// Renamed function according to best practices https://go.dev/doc/effective_go#mixed-caps
+// Instead of implementing error handling, an empty string will instead produce a hello message without personalization
+// Used sprintf instead of + string concatenation, although sprintf may be less performant.
+func printHello(name string) {
+	var message string
+	if len(name) > 0 {
+		message = fmt.Sprintf("Hello, %s!", name)
+	} else {
+		message = "Hello!"
+	}
+
+	println(message)
 }
 
+// No need to declare variables if the only use case is to return a function value.
 func main() {
-	fib := fibonacci(10)
-	fmt.Println(fib)
+	fmt.Println(fibonacci(10))
 
-	fact := factorial(5)
-	fmt.Println(fact)
+	fmt.Println(factorial(5))
 
-	prime := is_prime(17)
-	fmt.Println(prime)
+	fmt.Println(isPrime(43))
 
-	print_hello("Alice")
+	printHello("Alice")
 }
